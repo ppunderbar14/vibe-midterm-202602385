@@ -56,3 +56,11 @@ footer { padding-block: 24px 30px; margin-top: 20px; border-top: 1px solid var(-
 .skip-link:focus { top: 12px; }
 @media (max-width: 900px) { .customer-layout, .admin-layout { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 540px) { .wrap { padding-inline: 18px; } .site-header { flex-direction: column; align-items: flex-start; gap: 20px; padding-block: 22px; } .view-switch { width: 100%; } .view-switch button { flex: 1; } .intro { padding-block: 28px 24px; } .menu-grid { grid-template-columns: minmax(0, 1fr); } .menu-card, .panel { padding: 20px; } }
+
+.cart-item { padding-block: 18px; border-top: 1px solid var(--line); }
+.cart-item h3 { font-size: 16px; }
+.quantity-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 14px; }
+.quantity-row input { width: 68px; min-height: 44px; padding: 8px; border: 1px solid #958375; border-radius: 8px; color: var(--ink); background: white; text-align: center; }
+.quantity-row button { margin-left: auto; }
+.item-total { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; }
+.notice:not(:empty) { position: sticky; bottom: 12px; padding: 14px 18px; background: #fff8e9; border: 1px solid #aa8c65; border-radius: 12px; box-shadow: 0 4px 16px #35251e15; z-index: 2; }
