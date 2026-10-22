@@ -64,3 +64,13 @@ footer { padding-block: 24px 30px; margin-top: 20px; border-top: 1px solid var(-
 .quantity-row button { margin-left: auto; }
 .item-total { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; }
 .notice:not(:empty) { position: sticky; bottom: 12px; padding: 14px 18px; background: #fff8e9; border: 1px solid #aa8c65; border-radius: 12px; box-shadow: 0 4px 16px #35251e15; z-index: 2; }
+
+.error-box { padding: 14px 16px; border: 1px solid #a54230; background: #fff3ed; color: #842e21; border-radius: 10px; overflow-wrap: anywhere; }
+.order-card { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+.order-heading, .order-total { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.order-status { background: #f1e8dc; color: var(--accent); padding: 4px 12px; border-radius: 16px; font-size: 14px; }
+.order-items { list-style: none; padding: 0; }
+.order-items li { display: flex; align-items: start; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-block: 12px; border-bottom: 1px solid var(--line); }
+.order-items p { margin-block: 4px; }
+.order-total strong { font-size: 24px; }
+.inventory-list li { flex-wrap: wrap; overflow-wrap: anywhere; }
