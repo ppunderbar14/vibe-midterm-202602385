@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf6ef">
+  <title>한 잔의 여유 | 카페 주문</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="site-header wrap">
+    <a class="brand" href="./index.html" aria-label="한 잔의 여유 처음으로"><span class="brand-mark" aria-hidden="true">☕</span><span>한 잔의 여유<small>당신의 하루에, 작은 쉼표</small></span></a>
+    <nav class="view-switch" aria-label="화면 선택">
+      <button type="button" data-view="customer" aria-controls="customer-view" aria-pressed="true">고객 화면</button>
+      <button type="button" data-view="admin" aria-controls="admin-view" aria-pressed="false">관리자 화면</button>
+    </nav>
+  </header>
+  <main id="main" class="wrap" tabindex="-1">
+    <section id="customer-view" aria-labelledby="customer-title">
+      <div class="intro"><p class="eyebrow">A LITTLE BREAK</p><h1 id="customer-title">오늘은 어떤 한 잔이 좋을까요?</h1><p>좋아하는 음료에 나만의 취향을 더해 보세요.</p></div>
+      <div class="customer-layout">
+        <section aria-labelledby="menu-title"><div class="section-heading"><h2 id="menu-title">음료 메뉴</h2><span>5가지의 여유</span></div><div id="menu-list" class="menu-grid"></div></section>
+        <aside class="panel cart-panel" aria-labelledby="cart-title"><h2 id="cart-title">장바구니</h2><p class="muted small">현재 장바구니는 새로고침하면 초기화됩니다.</p><div id="cart-list"><p class="empty">장바구니가 비어 있어요.<br>마음에 드는 음료를 골라 주세요.</p></div><div class="cart-summary"><p>전체 수량 <strong id="cart-count">0잔</strong></p><p>합계 <strong id="cart-total">0원</strong></p></div><button class="primary full" type="button" disabled>주문 기능 준비 중</button></aside>
+      </div>
+      <section class="panel order-panel" aria-labelledby="confirmation-title"><h2 id="confirmation-title">주문 확인</h2><p class="muted">주문 기능을 준비하고 있어요. 아직 주문을 접수하지 않습니다.</p></section>
+    </section>
+    <section id="admin-view" aria-labelledby="admin-title" hidden>
+      <div class="intro"><p class="eyebrow">CAFE DESK</p><h1 id="admin-title">카페 관리</h1><p>주문과 음료 재고를 한눈에 확인하세요.</p><p class="small">시험용 관리자 화면입니다. 별도 로그인 기능은 없습니다.</p></div>
+      <div class="admin-layout"><section class="panel" aria-labelledby="orders-title"><h2 id="orders-title">주문 현황</h2><div class="empty">아직 주문 기능이 없습니다.<br>주문 접수와 제조 완료 처리는 다음 단계에서 제공됩니다.</div></section><section class="panel" aria-labelledby="inventory-title"><h2 id="inventory-title">재고 현황</h2><p class="muted small">장바구니에 담아도 재고는 줄어들지 않습니다.</p><ul id="inventory-list" class="inventory-list"></ul></section></div>
+    </section>
+    <p id="announcement" class="notice" role="status" aria-live="polite" aria-atomic="true"></p>
+    <noscript><p class="notice">메뉴와 화면 전환을 사용하려면 JavaScript를 켜 주세요.</p></noscript>
+  </main>
+  <footer class="wrap">법행정세무학과 | 202602385 | 서승환</footer>
+</body>
+</html>
