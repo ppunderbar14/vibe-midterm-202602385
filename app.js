@@ -141,6 +141,7 @@ function syncControls() {
     button.textContent = soldOut ? '품절' : '장바구니 담기';
   });
   document.querySelectorAll('[data-option], [data-quantity], [data-remove]').forEach(input => { input.disabled = blocked; });
+  document.querySelectorAll('[data-complete-order]').forEach(button => { button.disabled = blocked; });
   const button = document.querySelector('#place-order');
   button.disabled = blocked || !state.cart.length;
   button.textContent = processing ? '주문 처리 중…' : '주문 확정';
@@ -193,14 +194,47 @@ function renderCart() {
   quantityProblem = null;
   renderTotals();
 }
-function renderOrders() {
-  document.querySelector('#customer-orders').innerHTML = state?.orders.length ? [...state.orders].reverse().map(order => `
-    <article class="order-card">
-      <div class="order-heading"><h3 tabindex="-1" data-order-id="${order.id}">${order.id}</h3><strong class="order-status">${order.status === 'pending' ? '접수' : '제조 완료'}</strong></div>
-      <p class="muted small"><time datetime="${order.createdAt}">${escapeHtml(new Date(order.createdAt).toLocaleString('ko-KR'))}</time></p>
+function orderedOrders() {
+  return state ? [...state.orders].sort((first, second) => {
+    if (first.status !== second.status) return first.status === 'pending' ? -1 : 1;
+    const byTime = Date.parse(second.createdAt) - Date.parse(first.createdAt);
+    return byTime || Number(second.id.slice(4)) - Number(first.id.slice(4));
+  }) : [];
+}
+function renderOrderCards(target, admin = false) {
+  target.innerHTML = state?.orders.length ? orderedOrders().map(order => `
+    <article class="order-card" data-order="${order.id}">
+      <div class="order-heading"><h3 tabindex="-1" data-order-heading="${order.id}" data-order-id="${order.id}">${order.id}</h3><strong class="order-status">${order.status === 'pending' ? '접수' : '제조 완료'}</strong></div>
+      <p class="muted small"><time datetime="${order.createdAt}">주문 ${escapeHtml(new Date(order.createdAt).toLocaleString('ko-KR'))}</time></p>
       <ul class="order-items">${order.items.map(item => `<li><div><strong>${escapeHtml(item.menuName)}</strong><p class="small">${optionText(item)} · ${item.quantity}잔</p><p class="muted small">기본 ${won(item.basePrice)} + 옵션 ${won(item.optionPrice)} · 확정 단가 ${won(item.unitPrice)}</p></div><strong>${won(item.lineTotal)}</strong></li>`).join('')}</ul>
       <p class="order-total">총액 <strong>${won(order.total)}</strong></p>
+      ${order.completedAt ? `<p class="muted small completion-time"><time datetime="${order.completedAt}">제조 완료 ${escapeHtml(new Date(order.completedAt).toLocaleString('ko-KR'))}</time></p>` : ''}
+      ${admin && order.status === 'pending' ? `<button type="button" class="primary completion-button" data-complete-order="${order.id}" aria-label="${order.id} 제조 완료"${processing || storageError ? ' disabled' : ''}>제조 완료</button>` : ''}
     </article>`).join('') : `<p class="empty">${state ? '아직 접수된 주문이 없습니다.' : '저장된 주문을 확인할 수 없습니다.'}</p>`;
+}
+function renderOrders() {
+  renderOrderCards(document.querySelector('#customer-orders'));
+  renderOrderCards(document.querySelector('#admin-orders'), true);
+  syncControls();
+}
+function completeOrder(id) {
+  if (storageError || processing) return;
+  const visibleOrder = state?.orders.find(order => order.id === id);
+  if (!visibleOrder || visibleOrder.status !== 'pending') return;
+  processing = true;
+  syncControls();
+  try {
+    const candidate = clone(latestState());
+    const order = candidate.orders.find(entry => entry.id === id);
+    if (!order || order.status !== 'pending') return;
+    order.status = 'completed';
+    order.completedAt = new Date().toISOString();
+    writeState(candidate);
+    renderOrders();
+    document.querySelector(`#admin-orders [data-order-heading="${id}"]`)?.focus();
+    announce(`${id} 주문을 제조 완료 처리했습니다. 재고와 주문 금액은 변경하지 않았습니다.`);
+  } catch (error) { blockStorage(error); }
+  finally { processing = false; syncControls(); }
 }
 function addItem(menuId, shot, syrup) {
   if (storageError || processing) return;
@@ -357,6 +391,10 @@ document.querySelector('#cart-list').addEventListener('click', event => {
     else document.querySelector('#cart-title').focus();
     announce(`${menuFor(removed).name} ${optionText(removed)} 항목을 삭제했습니다.${state.cart.length ? '' : ' 장바구니가 비었습니다.'}`);
   } catch (error) { blockStorage(error); }
+});
+document.querySelector('#admin-orders').addEventListener('click', event => {
+  const button = event.target.closest('[data-complete-order]');
+  if (button) completeOrder(button.dataset.completeOrder);
 });
 document.querySelector('#place-order').addEventListener('click', placeOrder);
 renderMenus();
